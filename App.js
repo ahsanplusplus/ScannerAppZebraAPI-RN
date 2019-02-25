@@ -17,6 +17,7 @@ import {createSwitchNavigator, createAppContainer} from 'react-navigation'
 import SplashView from './app/SplashView';
 import DepartureView from './app/DepartureView';
 import AddDepartureView from './app/AddDepartureView';
+import ZebraScanner from 'react-native-zebra-scanner';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -25,7 +26,6 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-type Props = {};
 const AppNav = createSwitchNavigator({
   AddArrival: {
     screen: AddArrivalView
@@ -50,7 +50,17 @@ const AppNav = createSwitchNavigator({
   resetOnBlur: false
 });
 const AppContainer = createAppContainer(AppNav);
-export default class App extends Component<Props> {
+export default class App extends Component{
+  scanListener = (scannedCode) => {
+    
+  }
+
+  async componentDidMount() {
+    let available = await ZebraScanner.isAvailable();
+    if (available) {
+      ZebraScanner.addScanListener(this.scanListener);
+    }
+  }
   render() {
     return (
       <Root>

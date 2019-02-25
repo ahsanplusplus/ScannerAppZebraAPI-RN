@@ -12,7 +12,7 @@ class AddDepartureView extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            autoAdd: false,
+            autoAdd: true,
             dialog: false,
             tagNo:'',
             containerNo: this.props.navigation.getParam('containerNo', '')
@@ -27,7 +27,6 @@ class AddDepartureView extends Component {
             this.toast('Error '+err.message, 'danger');
         }
         db = SQLite.openDatabase('data.sqlite', '3', 'Root database', 20000, this.openDBCB, this.DBErrorCB);
-        this.setState({dialog: true})
     }
 
     componentWillUnmount() {

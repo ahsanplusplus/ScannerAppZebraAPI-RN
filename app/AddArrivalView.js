@@ -14,7 +14,7 @@ class AddArrival extends Component {
         super(props);
         this.state = {
             tag_number:'',
-            autoAdd: false,
+            autoAdd: true,
             dialog: false,
             flight_name: this.props.navigation.getParam('flight_name', ''),
             flight_number: this.props.navigation.getParam('flight_name', '')
@@ -29,7 +29,6 @@ class AddArrival extends Component {
             this.toast('Error '+err.message, 'danger');
         }
         db = SQLite.openDatabase('data.sqlite', '3', 'Root database', 20000, this.openDBCB, this.DBErrorCB);
-        this.setState({dialog: true})
     }
 
     componentWillUnmount() {
