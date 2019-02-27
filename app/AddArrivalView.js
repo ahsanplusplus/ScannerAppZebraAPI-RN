@@ -4,6 +4,7 @@ import styles from './styles/StartStyle';
 import { Content, H3, Toast } from 'native-base';
 import { TextInput, Button } from 'react-native-paper';
 import Dialog from "react-native-dialog";
+import RNFS from 'react-native-fs'
 import ZebraScanner from 'react-native-zebra-scanner';
 // import DataWedgeIntents from 'react-native-datawedge-intents';
 import SQLite from 'react-native-sqlite-2';
@@ -16,8 +17,8 @@ class AddArrival extends Component {
             tag_number:'',
             autoAdd: true,
             dialog: false,
-            flight_name: this.props.navigation.getParam('flight_name', ''),
-            flight_number: this.props.navigation.getParam('flight_name', '')
+            flight_name: this.props.navigation.getParam('flight_name'),
+            flight_number: this.props.navigation.getParam('flight_name')
         };
     }
 
@@ -47,11 +48,18 @@ class AddArrival extends Component {
     }
 
     sqlErrorCB(err){
-        this.toast('SQL execution failed' + err.message, 'danger');
+        Toast.show({
+            text: 'SQL execution failed' + err.message,
+            duration: 2500,
+            type: 'danger'
+        });
     }
 
     sqlSuccessCB(){
-        this.toast('SQL executed successfully', 'success');
+        Toast.show({
+            text: 'Data saved successfully',
+            duration: 2500
+        });
     }
 
     openDBCB(){
@@ -95,10 +103,10 @@ class AddArrival extends Component {
         return (
             <Content contentContainerStyle={styles.view}>
                 <H3 style={[styles.contents, styles.centerText]}>
-                    Flight: {this.state.flight_name}
+                    Flight: {this.props.navigation.getParam('flight_name')}
                 </H3>
                 <H3 style={[styles.contents, styles.centerText]}>
-                    Flight number: {this.state.flight_number}
+                    Flight number: {this.props.navigation.getParam('flight_number')}
                 </H3>
                 <Text style={[styles.contents, styles.centerText]}>
                     Add Baggage for this flight

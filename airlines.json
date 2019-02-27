@@ -1,0 +1,52 @@
+{
+    "airlines":[
+        {
+            "value": "Air Peace"
+        },
+        {
+            "value": "Allied Air"
+        },
+        {
+            "value": "Arik Air"
+        },
+        {
+            "value": "Aero Contractors"
+        },
+        {
+            "value": "Associated Aviation"
+        },
+        {
+            "value": "Azman Air"
+        },
+        {
+            "value": "Dana Air"
+        },
+        {
+            "value": "Donier Aviation"
+        },
+        {
+            "value": "First Nation Airways"
+        },
+        {
+            "value": "Hak Air"
+        },
+        {
+            "value": "Kabo Air"
+        },
+        {
+            "value": "Max Air"
+        },
+        {
+            "value": "Med-View Airline"
+        },
+        {
+            "value": "Nigeria Air"
+        },
+        {
+            "value": "Overland Airways"
+        },
+        {
+            "value": "TAT Nigeria"
+        }
+    ]
+}

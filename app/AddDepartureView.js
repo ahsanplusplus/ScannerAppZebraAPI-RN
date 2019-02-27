@@ -35,7 +35,7 @@ class AddDepartureView extends Component {
 
     scanListener = (scannedCode) => {
         this.setState({
-            tag_number: scannedCode,
+            tagNo: scannedCode,
         });
         if (this.state.autoAdd) {
             //

@@ -4,13 +4,15 @@ import { Content, Toast } from 'native-base';
 import styles from './styles/StartStyle';
 import { TextInput, Button } from 'react-native-paper';
 import ZebraScanner from 'react-native-zebra-scanner';
-
+import { Dropdown } from 'react-native-material-dropdown';
+import airlines from '../airlines.json';
 class ArrivalView extends Component {
     constructor(props) {
         super(props);
         this.state = {
             flight_number:'',
             flight_name:'',
+            airline_name:''
         };
     }
 
@@ -38,7 +40,8 @@ class ArrivalView extends Component {
     navigate(route) {
         this.props.navigation.navigate(route, {
             flight_name: this.state.flight_name,
-            flight_number: this.state.flight_number
+            flight_number: this.state.flight_number,
+            airline_name: this.state.airline_name
         })
     }
 
@@ -48,6 +51,11 @@ class ArrivalView extends Component {
                 <Text style={[styles.contents, styles.centerText]}>
                     Scan a code or input flight number and flight name
                 </Text>
+                <Dropdown
+                    label='Airline Name'
+                    data={airlines.airlines}
+                    onChangeText={(val, index, data) => this.setState({airline_name: val})}
+                />
                 <TextInput
                     mode='outlined'
                     label='Flight name'

@@ -3,6 +3,7 @@ package com.scanner;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
 import ee.bolt.zebrascanner.ZebraScannerPackage;
 import dog.craftz.sqlite_2.RNSqlite2Package;
 import com.facebook.react.ReactNativeHost;
@@ -27,6 +28,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFSPackage(),
             new ZebraScannerPackage(),
             new RNSqlite2Package()
           // new SQLitePluginPackage(),
