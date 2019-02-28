@@ -12,7 +12,6 @@ class ArrivalView extends Component {
         this.state = {
             flight_number:'',
             flight_name:'',
-            airline_name:''
         };
     }
 
@@ -41,7 +40,6 @@ class ArrivalView extends Component {
         this.props.navigation.navigate(route, {
             flight_name: this.state.flight_name,
             flight_number: this.state.flight_number,
-            airline_name: this.state.airline_name
         })
     }
 
@@ -54,19 +52,13 @@ class ArrivalView extends Component {
                 <Dropdown
                     label='Airline Name'
                     data={airlines.airlines}
-                    onChangeText={(val, index, data) => this.setState({airline_name: val})}
+                    onChangeText={(val, index, data) => this.setState({flight_name: val})}
                 />
-                <TextInput
-                    mode='outlined'
-                    label='Flight name'
-                    value={this.state.flight_name}
-                    onChangeText={(flight_name) => this.setState({flight_name})}
-                    style={styles.contents}/>
                 <TextInput
                     mode='outlined'
                     label='Flight number'
                     value={this.state.flight_number}
-                    onChangeText={(flight_number) => this.setState(flight_number)}
+                    onChangeText={(flight_number) => this.setState({flight_number})}
                     style={styles.contents}/>
                 <Button icon='arrow-forward' mode='contained' style={styles.contents} onPress={() => this.navigate('AddArrival')} >
                     Continue

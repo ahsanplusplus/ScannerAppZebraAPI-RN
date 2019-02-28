@@ -48,7 +48,7 @@ class StartView extends Component {
     render() {
         return (
         <Content contentContainerStyle={styles.view}>
-            <Text style={styles.contents}>Where do we go from here? </Text>
+            <Text style={styles.contents}>Welcome BSS</Text>
             <Button icon='arrow-forward' mode='contained' style={styles.contents} onPress={() => this.navigate('Arrivals')}>
                 Arrivals
             </Button>

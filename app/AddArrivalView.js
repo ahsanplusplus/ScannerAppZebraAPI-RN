@@ -17,19 +17,23 @@ class AddArrival extends Component {
             tag_number:'',
             autoAdd: true,
             dialog: false,
-            flight_name: this.props.navigation.getParam('flight_name'),
-            flight_number: this.props.navigation.getParam('flight_name')
+            flight_name: '',
+            flight_number: ''
         };
     }
 
     async componentDidMount() {
+        this.setState({
+            flight_name: this.props.navigation.getParam('flight_name'),
+            flight_number: this.props.navigation.getParam('flight_number')
+        })
         try {
             let available = await ZebraScanner.isAvailable();
             ZebraScanner.addScanListener(this.scanListener);
         } catch (err) {
             this.toast('Error '+err.message, 'danger');
         }
-        db = SQLite.openDatabase('data.sqlite', '3', 'Root database', 20000, this.openDBCB, this.DBErrorCB);
+        db = SQLite.openDatabase({name: 'data.sqlite'}, this.openDBCB, this.DBErrorCB);
     }
 
     componentWillUnmount() {
@@ -47,9 +51,16 @@ class AddArrival extends Component {
         this.toast('Captured');
     }
 
+    createTable() {
+        var qry = "CREATE TABLE IF NOT EXISTS arrivals ( id INTEGER PRIMARY KEY ASC AUTOINCREMENT UNIQUE, flight_no INT(250), flight_name STRING, tag_number INT(250), created_at STRING );"
+        db.transaction(txn => {
+            txn.executeSql(qry, [])
+        })
+    }
+
     sqlErrorCB(err){
         Toast.show({
-            text: 'SQL execution failed' + err.message,
+            text: 'SQL execution failed: ' + err.message,
             duration: 2500,
             type: 'danger'
         });
@@ -81,14 +92,24 @@ class AddArrival extends Component {
         });
     }
 
+    currentDT(){
+        var that = this;
+        var date = new Date().getDate(); //Current Date
+        var month = new Date().getMonth() + 1; //Current Month
+        var year = new Date().getFullYear(); //Current Year
+        var hours = new Date().getHours(); //Current Hours
+        var min = new Date().getMinutes(); //Current Minutes
+        var sec = new Date().getSeconds(); //Current Seconds
+
+        return date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
+    }
+
     storeData(){
+        var st = this.state;
         db.transaction((txn) =>{
-            txn.executeSql('INSERT INTO arrivals (flight_no, flight_name, tag_number) VALUES (:flight_no, :flight_name, :tag_number)', [
-                this.state.flight_number,
-                this.state.flight_name,
-                this.state.tag_number
-            ]);
-        }, this.sqlSuccessCB, this.sqlErrorCB);
+            txn.executeSql('INSERT INTO arrivals (flight_no, flight_name, tag_number, created_at) VALUES (?,?,?,?);',
+            [st.flight_number, st.flight_name, st.tag_number, this.currentDT()], this.sqlSuccessCB, this.sqlErrorCB)
+        });
     }
 
     updateAutoAdd(){
@@ -103,10 +124,10 @@ class AddArrival extends Component {
         return (
             <Content contentContainerStyle={styles.view}>
                 <H3 style={[styles.contents, styles.centerText]}>
-                    Flight: {this.props.navigation.getParam('flight_name')}
+                    Flight: {this.state.flight_name}
                 </H3>
                 <H3 style={[styles.contents, styles.centerText]}>
-                    Flight number: {this.props.navigation.getParam('flight_number')}
+                    Flight number: {this.state.flight_number}
                 </H3>
                 <Text style={[styles.contents, styles.centerText]}>
                     Add Baggage for this flight

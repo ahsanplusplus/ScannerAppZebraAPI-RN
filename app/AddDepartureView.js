@@ -15,22 +15,32 @@ class AddDepartureView extends Component {
             autoAdd: true,
             dialog: false,
             tagNo:'',
-            containerNo: this.props.navigation.getParam('containerNo', '')
+            containerNo: ''
         };
     }
 
     async componentDidMount() {
+        this.setState({
+            containerNo: this.props.navigation.getParam('containerNo')
+        })
         try {
             let available = await ZebraScanner.isAvailable();
             ZebraScanner.addScanListener(this.scanListener);
         } catch (err) {
             this.toast('Error '+err.message, 'danger');
         }
-        db = SQLite.openDatabase('data.sqlite', '3', 'Root database', 20000, this.openDBCB, this.DBErrorCB);
+        db = SQLite.openDatabase('db.sqlite', '3', 'Root database', 20000, this.openDBCB, this.DBErrorCB);
     }
 
     componentWillUnmount() {
         // ZebraScanner.removeScanListener(this.scanListener);
+    }
+
+    createTable(){
+        var qry = "CREATE TABLE IF NOT EXISTS arrivals ( id INTEGER PRIMARY KEY ASC AUTOINCREMENT UNIQUE, flight_no INT(250), flight_name STRING, tag_number INT(250), created_at STRING );"
+        db.transaction(txn => {
+            txn.executeSql(qry, [])
+        })
     }
 
     scanListener = (scannedCode) => {
@@ -45,11 +55,18 @@ class AddDepartureView extends Component {
     }
 
     sqlErrorCB(err){
-        this.toast('SQL execution failed' + err.message, 'danger');
+        Toast.show({
+            text: 'SQL execution failed',
+            type: 'danger',
+            duration: 2500
+        });
     }
 
     sqlSuccessCB(){
-        this.toast('SQL executed successfully', 'success');
+        Toast.show({
+            text: 'Data saved successfully',
+            duration: 2500
+        });
     }
 
     openDBCB(){
@@ -60,7 +77,11 @@ class AddDepartureView extends Component {
     }
 
     DBErrorCB(err){
-        this.toast('Could not open database. Please re-install the app', 'danger');
+        Toast.show({
+            text: 'Could not open database. Please re-install the app',
+            type: 'danger',
+            duration: 2500
+        });
     }
 
     toast(text, type = 'default') {
@@ -72,12 +93,11 @@ class AddDepartureView extends Component {
     }
 
     storeData(){
+        var st = this.state;
         db.transaction((txn) =>{
-            txn.executeSql('INSERT INTO departures (containerNo, tagNo) VALUES (:containerNo, :tagNo)', [
-                this.state.containerNo,
-                this.state.tagNo
-            ]);
-        }, this.sqlSuccessCB, this.sqlErrorCB);
+            txn.executeSql('INSERT INTO departures (containerNo, tagNo) VALUES (?,?);', 
+            [st.containerNo, st.tagNo], this.sqlSuccessCB, this.sqlErrorCB)
+        });
     }
 
     updateAutoAdd(){
@@ -92,7 +112,7 @@ class AddDepartureView extends Component {
         return (
             <Content contentContainerStyle={styles.view}>
                 <H3 style={[styles.contents, styles.centerText]}>
-                    Flight: {this.state.containerNo}
+                    Container Number: {this.state.containerNo}
                 </H3>
                 <Text style={[styles.contents, styles.centerText]}>
                     Add Baggage for this container
